@@ -60,9 +60,6 @@ export const getLeads = async (req, res, next) => {
     const total = await Lead.countDocuments(filter);
     const totalPages = Math.ceil(total / limitNum);
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Fetched ${leads.length} leads for user ${req.user._id}`);
-    }
 
     return res.status(200).json({
       success: true,
@@ -100,9 +97,6 @@ export const createLead = async (req, res, next) => {
       owner: req.user._id
     });
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Created new lead ${lead._id} for user ${req.user._id}`);
-    }
 
     return res.status(201).json({
       success: true,
@@ -170,9 +164,6 @@ export const updateLead = async (req, res, next) => {
       { new: true, runValidators: true }
     );
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Updated lead ${lead._id}`);
-    }
 
     return res.status(200).json({
       success: true,
@@ -210,9 +201,6 @@ export const updateLeadStatus = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Lead not found' });
     }
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Updated status to ${status} for lead ${lead._id}`);
-    }
 
     return res.status(200).json({
       success: true,
@@ -242,9 +230,6 @@ export const deleteLead = async (req, res, next) => {
 
     await lead.deleteOne();
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Deleted lead ${req.params.id}`);
-    }
 
     return res.status(200).json({
       success: true,

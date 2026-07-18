@@ -11,7 +11,7 @@ dotenv.config();
 
 // Validate required environment variables
 function checkRequiredEnvVars() {
-  const required = ['MONGODB_URI', 'JWT_SECRET', 'PORT'];
+  const required = ['MONGODB_URI', 'JWT_SECRET'];
   const missing = required.filter(envVar => !process.env[envVar]);
   if (missing.length > 0) {
     console.error(`FATAL ERROR: Missing required environment variables: ${missing.join(', ')}`);
@@ -34,13 +34,13 @@ const app = express();
 app.use(helmet());
 
 // cors configuration to allow requests from the frontend URL with credentials
-const allowedOrigins = [process.env.FRONTEND_URL, 'https://your-app.vercel.app'];
-app.use(cors({ 
+const allowedOrigins = [process.env.FRONTEND_URL, 'https://your-app.vercel.app', 'http://localhost:5173'];
+app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) callback(null, true);
     else callback(new Error('Not allowed by CORS'));
-  }, 
-  credentials: true 
+  },
+  credentials: true
 }));
 
 // express.json limits body size to 10kb to prevent payload too large attacks
@@ -67,15 +67,15 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Rate Limiting
-const generalLimiter = rateLimit({ 
-  windowMs: 15 * 60 * 1000, 
-  max: 100, 
-  message: 'Too many requests, please try again later.' 
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: 'Too many requests, please try again later.'
 });
-const authLimiter = rateLimit({ 
-  windowMs: 15 * 60 * 1000, 
-  max: 10, 
-  message: 'Too many auth attempts.' 
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: 'Too many auth attempts.'
 });
 
 app.use('/api/', generalLimiter);
@@ -96,9 +96,9 @@ app.use('/api/leads', leadRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'OK', 
-    timestamp: new Date() 
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date()
   });
 });
 
