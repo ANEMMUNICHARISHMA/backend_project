@@ -37,11 +37,8 @@ app.use(helmet());
 const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:5173'];
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin) || (origin && origin.endsWith('.vercel.app'))) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
+    // TEMPORARY FIX: Allow ALL origins to debug Vercel network errors
+    callback(null, true);
   },
   credentials: true
 }));
